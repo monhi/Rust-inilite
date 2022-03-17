@@ -7,9 +7,12 @@ use std::path::Path;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::prelude::*;
+use std::io::BufReader;
+use std::io::{self, BufRead};
 
 pub struct IniNode{
    pub filename:String,
+   pub currentsection:String,
    pub hashmap :HashMap<String,String>
 }
 
@@ -34,15 +37,35 @@ impl Methods for IniNode
     }
 
     fn create_file(&self) -> bool {
-        let _file = File::create(&self.filename);
+        let _file = File::create(&self.filename);  
         return self.check_file_exists();
     }
 
     fn process_file(&mut self) -> bool
     {
-        if self.check_file_exists() 
+        if self.check_file_exists()
         {
-            self.hashmap.insert("general-version".to_string(), "1.0".to_string());
+            let file   = File::open(&self.filename).expect("file not found!");
+            let reader = BufReader::new(file);
+
+            for line in reader.lines() 
+            {
+                let stemp: String = line.unwrap().trim().to_string();
+                if stemp.chars().nth(0).unwrap() == '[' &&  stemp.chars().nth(stemp.len()-1).unwrap() == ']'
+                {
+                    let stemp = stemp.replace("[",""); 
+                    let stemp = stemp.replace("]","");
+                    println!("found section: {}",stemp);
+                }
+                else
+                {
+                    let idx = stemp.find('=');
+                    
+                }
+
+
+            }            
+            //self.hashmap.insert("general-version".to_string(), "1.0".to_string());
             return true;
         }
         return self.create_file();
