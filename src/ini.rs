@@ -10,9 +10,8 @@ use std::io::prelude::*;
 use std::io::BufReader;
 use std::io::{self, BufRead};
 
-pub struct IniNode{
+pub struct IniNode{ 
    pub filename:String,
-   pub currentsection:String,
    pub hashmap :HashMap<String,String>
 }
 
@@ -21,7 +20,7 @@ pub trait Methods {
     fn check_file_exists(&self) -> bool;
     fn create_file(&self) -> bool;
     fn process_file(&mut self) -> bool;
-    fn get_key_value(&self, param:String) -> String;
+    fn get_key_value(&self, str_key:String, str_section:String) -> String;
 }
 
 impl Methods for IniNode 
@@ -45,6 +44,7 @@ impl Methods for IniNode
     {
         if self.check_file_exists()
         {
+            let mut currentsection:String = "".to_string();
             let file   = File::open(&self.filename).expect("file not found!");
             let reader = BufReader::new(file);
 
@@ -56,24 +56,47 @@ impl Methods for IniNode
                     let stemp = stemp.replace("[",""); 
                     let stemp = stemp.replace("]","");
                     println!("found section: {}",stemp);
+                    currentsection = stemp;
                 }
                 else
                 {
-                    let idx = stemp.find('=');
-                    
+                    let split = stemp.split("=");                    
+                    let mut i          = 0;
+                    let mut key:String = "".to_string();
+                    let mut val:String = "".to_string();
+
+                    for s in split {
+                        if i == 0
+                        {
+                            key = s.to_string();
+                            i = 1;
+                        }
+                        else if i == 1
+                        {
+                            val = s.to_string();
+                            i = 2;
+                            let mut mykey = currentsection.clone();
+                            mykey.push('+');
+                            mykey.push_str(&*key);     
+                            self.hashmap.insert(mykey, val);
+                        }
+                        else
+                        {}
+                    }
                 }
-
-
             }            
-            //self.hashmap.insert("general-version".to_string(), "1.0".to_string());
             return true;
         }
+        println!("File not found. Creating ...");
         return self.create_file();
     }
 
-    fn get_key_value(&self,param:String) -> String
+    fn get_key_value(&self,str_key:String,str_section:String) -> String
     {
-        let     ret = self.hashmap.get(&param);
+        let mut    key = str_section;
+        key.push_str("+");
+        key.push_str(&*str_key);
+        let     ret = self.hashmap.get(&key);
         match ret 
         {
             Some(z) => return z.to_string(),
