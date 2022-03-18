@@ -8,7 +8,7 @@ Thus I implemented it by using Rust language.
 
 Current version is working properly but it not tested enough.
 
-** How to use it**
+## How to use it
 
 * Download the project.
 * run cargo build to build the project.
