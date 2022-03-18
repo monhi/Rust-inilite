@@ -2,14 +2,19 @@ mod ini;
 
 use crate::ini::Methods;  
 use std::collections::HashMap;
+use std::collections::HashSet;
 
 fn main() {
     let keys = HashMap::new();
-    let mut node = ini::IniNode{filename:"f:\\config.ini".to_string(),hashmap:keys};
-    //node.print_file_name();
-    //println!("{}",node.check_file_exists());
-    //node.create_file();
-    //println!("{}",node.check_file_exists());
+    let set  = HashSet::new();
+    let mut node = ini::IniNode{filename:"f:\\config.ini".to_string(),hashmap:keys,hashset:set};
+
     node.process_file();  
-    println!("{}",node.get_key_value("version".to_string(),"general".to_string()));
+    node.set_key("Rust".to_string(),"Language".to_string(), "general".to_string());
+    node.set_key("1".to_string(),"classno".to_string(), "class".to_string());
+    node.set_key("1.58".to_string(),"Version".to_string(), "general".to_string());
+    node.set_key("DSPCOM".to_string(),"Company".to_string(), "general".to_string());
+
+    println!("Programming language is {}",node.get_key_value("Language".to_string(),"general".to_string()));
+    println!("Current Rust version is {}",node.get_key_value("Version".to_string(),"general".to_string()));    
 }

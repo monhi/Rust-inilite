@@ -1,106 +1,133 @@
-#![allow(unused_imports)]
-#![allow(dead_code)]
-#![allow(unused_unsafe)]
-
-use std::fs;
-use std::path::Path;
 use std::collections::HashMap;
+use std::collections::HashSet;
 use std::fs::File;
-use std::io::prelude::*;
+use std::io::BufRead;
 use std::io::BufReader;
-use std::io::{self, BufRead};
+use std::io::Write;
 
-pub struct IniNode{ 
-   pub filename:String,
-   pub hashmap :HashMap<String,String>
+pub struct IniNode {
+    pub filename: String,
+    pub hashmap: HashMap<String, String>,
+    pub hashset: HashSet<String>,
 }
 
 pub trait Methods {
-    fn print_file_name(&self);
+    //fn print_file_name(&self);
     fn check_file_exists(&self) -> bool;
     fn create_file(&self) -> bool;
     fn process_file(&mut self) -> bool;
-    fn get_key_value(&self, str_key:String, str_section:String) -> String;
+    fn get_key_value(&self, str_key: String, str_section: String) -> String;
+    fn set_key(&mut self, str_value: String, str_key: String, str_section: String);
+    fn save(&mut self);
 }
 
-impl Methods for IniNode 
-{
-    fn print_file_name(&self)
+impl Methods for IniNode {
+    /* fn print_file_name(&self)
     {
-        println!("{}",self.filename);
+       println!("{}",self.filename);
     }
-    
+    */
+
     fn check_file_exists(&self) -> bool {
         let b = std::path::Path::new(&self.filename).exists();
         return b;
     }
 
     fn create_file(&self) -> bool {
-        let _file = File::create(&self.filename);  
+        let _file = File::create(&self.filename);
         return self.check_file_exists();
     }
 
-    fn process_file(&mut self) -> bool
-    {
-        if self.check_file_exists()
-        {
-            let mut currentsection:String = "".to_string();
-            let file   = File::open(&self.filename).expect("file not found!");
+    fn process_file(&mut self) -> bool {
+        if self.check_file_exists() {
+            let mut currentsection: String = "".to_string();
+            let file = File::open(&self.filename).expect("file not found!");
             let reader = BufReader::new(file);
 
-            for line in reader.lines() 
-            {
+            for line in reader.lines() {
                 let stemp: String = line.unwrap().trim().to_string();
-                if stemp.chars().nth(0).unwrap() == '[' &&  stemp.chars().nth(stemp.len()-1).unwrap() == ']'
+                if stemp.len() == 0 
                 {
-                    let stemp = stemp.replace("[",""); 
-                    let stemp = stemp.replace("]","");
-                    println!("found section: {}",stemp);
-                    currentsection = stemp;
+                    continue;
                 }
-                else
+                    
+                if stemp.chars().nth(0).unwrap() == '['
+                    && stemp.chars().nth(stemp.len() - 1).unwrap() == ']'
                 {
-                    let split = stemp.split("=");                    
-                    let mut i          = 0;
-                    let mut key:String = "".to_string();
-                    let mut val:String = "".to_string();
+                    let stemp = stemp.replace("[", "");
+                    let stemp = stemp.replace("]", "");
+                    //println!("found section: {}",stemp);
+                    currentsection = stemp.clone();
+                    self.hashset.insert(stemp.clone());
+                } else {
+                    let split = stemp.split("=");
+                    let mut i = 0;
+                    let mut key: String = "".to_string();
+                    let mut val: String;
 
                     for s in split {
-                        if i == 0
-                        {
+                        if i == 0 {
                             key = s.to_string();
                             i = 1;
-                        }
-                        else if i == 1
-                        {
+                        } else if i == 1 {
                             val = s.to_string();
                             i = 2;
                             let mut mykey = currentsection.clone();
                             mykey.push('+');
-                            mykey.push_str(&*key);     
+                            mykey.push_str(&*key);
                             self.hashmap.insert(mykey, val);
+                        } else {
                         }
-                        else
-                        {}
                     }
                 }
-            }            
+            }
             return true;
         }
         println!("File not found. Creating ...");
         return self.create_file();
     }
 
-    fn get_key_value(&self,str_key:String,str_section:String) -> String
-    {
-        let mut    key = str_section;
+    fn get_key_value(&self, str_key: String, str_section: String) -> String {
+        let mut key = str_section;
         key.push_str("+");
         key.push_str(&*str_key);
-        let     ret = self.hashmap.get(&key);
-        match ret 
-        {
+        let ret = self.hashmap.get(&key);
+        match ret {
             Some(z) => return z.to_string(),
-            None => return "".to_string()
+            None => return "".to_string(),
+        }
+    }
+
+    fn set_key(&mut self, str_value: String, str_key: String, str_section: String) {
+        let mut mykey = str_section.clone();
+        mykey.push_str("+");
+        mykey.push_str(&*str_key.clone());
+        self.hashset.insert(str_section);
+        self.hashmap.insert(mykey, str_value);
+        self.save();
+    }
+
+    fn save(&mut self) {
+        let mut file = File::create(self.filename.clone()).unwrap();
+
+        for section in &self.hashset {
+            let mut stemp = "[".to_string();
+            stemp.push_str(section);
+            stemp.push(']');
+            writeln!(&mut file, "{}", stemp).unwrap();
+
+            for (key, value) in &self.hashmap {
+                let mut ss = section.clone();
+                ss.push('+');
+                if key.contains(&*ss)
+                {
+                    let mut wdata = key.replace(&*ss, "");
+                    wdata.push('=');
+                    wdata.push_str(value);
+                    writeln!(&mut file, "{}", wdata).unwrap();
+                }
+                //println!("{} / {}", key, value);
+            }
         }
     }
 }
