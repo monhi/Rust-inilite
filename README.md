@@ -20,7 +20,7 @@ But you can change it based on your requirements.
 
 to use this file, you are supposed to first initialize the structure by passing required fields.
 
-Then run process_file() to create the file or read fild contents.
+Then run process_file() to create the file or read field contents.
 
 Then by using 'set_key' you can write new keys into ini file.
 
