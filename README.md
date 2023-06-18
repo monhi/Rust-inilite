@@ -14,7 +14,7 @@ Current version is working properly but it not tested enough.
 * run cargo build to build the project.
 * run cargo run to run the project.
 
-As I test it in windows OS, I set f:\config.ini as the ini file name in main.rs file.
+As I test it in windows OS, I set d:\config.ini as the ini file name in main.rs file.
 
 But you can change it based on your requirements.
 
