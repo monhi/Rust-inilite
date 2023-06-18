@@ -7,7 +7,7 @@ use std::collections::HashSet;
 fn main() {
     let keys = HashMap::new();
     let set  = HashSet::new();
-    let mut node = ini::IniNode{filename:"f:\\config.ini".to_string(),hashmap:keys,hashset:set};
+    let mut node = ini::IniNode{filename:"d:\\config.ini".to_string(),hashmap:keys,hashset:set};
 
     node.process_file();  
     node.set_key("Rust".to_string(),"Language".to_string(), "general".to_string());
