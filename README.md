@@ -12,9 +12,9 @@ The current version is working properly and I upgrade it step by step to make it
 ## How to use it
 
 * Download the project.
-* run cargo build to build the project.
-* run cargo run to run the project.
-* run cargo test to test the project.
+* Run cargo build to build the project.
+* Run cargo run to run the project.
+* Run cargo test to test the project.
   
 As I test it in Windows OS, I set d:\config.ini as the ini file name in main.rs file.
 
