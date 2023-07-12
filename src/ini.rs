@@ -1,9 +1,14 @@
+pub mod ini_handler
+{
+
 use std::collections::HashMap;
 use std::collections::HashSet;
 use std::fs::File;
 use std::io::BufRead;
 use std::io::BufReader;
 use std::io::Write;
+
+
 
 pub struct IniNode {
     pub filename: String,
@@ -130,4 +135,44 @@ impl Methods for IniNode {
             }
         }
     }
+}
+	
+	
+}
+
+
+
+#[cfg(test)]
+mod tests 
+{
+    use super::*;
+	use std::collections::HashMap;
+	use std::collections::HashSet;
+	use crate::ini::ini_handler::Methods;	
+
+	#[test]
+    fn create_ini() 
+	{
+		let keys = HashMap::new();
+		let set  = HashSet::new();
+		let mut node = ini_handler::IniNode{filename:"d:\\config.ini".to_string(),hashmap:keys,hashset:set};		
+		node.process_file();
+		assert!(node.check_file_exists());		
+    }
+	
+	#[test]	
+	fn save_string_key()
+	{
+		let keys = HashMap::new();
+		let set  = HashSet::new();
+		let mut node = ini_handler::IniNode{filename:"d:\\config.ini".to_string(),hashmap:keys,hashset:set};		
+		node.process_file();
+		assert!(node.check_file_exists());	
+		
+		node.set_key("DSPCOM".to_string(),"Company".to_string(), "test_section".to_string());
+		assert_eq!(node.get_key_value("Company".to_string(),"test_section".to_string()),"DSPCOM".to_string());
+	}
+	
+	
+	
 }
