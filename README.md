@@ -1,4 +1,4 @@
-# inilite-rust
+# Rust-inilite
 
 Previously I implemented a simple ini file handler by using C++ language. 
 you can find it <a href="https://github.com/monhi/inilite">here</a>
