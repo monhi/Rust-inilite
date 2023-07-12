@@ -12,9 +12,9 @@ The current version is working properly and I upgrade it step by step to make it
 ## How to use it
 
 * Download the project.
-* Run cargo build to build the project.
-* Run cargo run to run the project.
-* Run cargo test to test the project.
+* Run `cargo build` to build the project.
+* Run `cargo run` to run the project.
+* Run `cargo test -- --test-threads=1` to test the project. In this way, tests run one after another in single thread.
   
 As I test it in Windows OS, I set d:\config.ini as the ini file name in main.rs file.
 
