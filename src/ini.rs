@@ -151,14 +151,14 @@ mod tests
 	use crate::ini::ini_handler::Methods;	
 
 	#[test]
-    fn create_ini() 
+    	fn create_ini() 
 	{
 		let keys = HashMap::new();
 		let set  = HashSet::new();
 		let mut node = ini_handler::IniNode{filename:"d:\\config.ini".to_string(),hashmap:keys,hashset:set};		
 		node.process_file();
 		assert!(node.check_file_exists());		
-    }
+    	}
 	
 	#[test]	
 	fn save_string_key()
@@ -173,6 +173,29 @@ mod tests
 		assert_eq!(node.get_key_value("Company".to_string(),"test_section".to_string()),"DSPCOM".to_string());
 	}
 	
+	#[test]
+	fn save_integer_key()
+	{
+		let keys = HashMap::new();
+		let set  = HashSet::new();
+		let mut node = ini_handler::IniNode{filename:"d:\\config.ini".to_string(),hashmap:keys,hashset:set};		
+		node.process_file();
+		assert!(node.check_file_exists());	
+		let i: i32 = -12;
+		node.set_key(i.to_string(),"IntValue".to_string(), "Numbers".to_string());
+		assert_eq!(node.get_key_value("IntValue".to_string(),"Numbers".to_string()),i.to_string());
+	}
 	
-	
+	#[test]
+	fn save_float_key()
+	{
+		let keys = HashMap::new();
+		let set  = HashSet::new();
+		let mut node = ini_handler::IniNode{filename:"d:\\config.ini".to_string(),hashmap:keys,hashset:set};		
+		node.process_file();
+		assert!(node.check_file_exists());	
+		let f: f64 = 3.14;
+		node.set_key(f.to_string(),"FloatValue".to_string(), "Numbers".to_string());
+		assert_eq!(node.get_key_value("FloatValue".to_string(),"Numbers".to_string()),f.to_string());
+	}	
 }
