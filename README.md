@@ -34,6 +34,19 @@ The whole module is implemented in ini.rs file.
 
 I use traits to implement the necessary methods to handle ini actions.
 
+## Unit testing 
+Rust is a modern language.
+One of the features that I love a lot in this language is the unit testing capability.
+In this project I implement the `ini_handler` module in `src/ini.rs` file and inside of it, I test different features of that module.
+Thus I have the capability to test each module separately and those test routines evolve gradually to give an error-less module.
+As all my test modules use `d:\config.ini` file, I have to set the test to run one after another. 
+For that, I use `--test-threads=1` flag which gives this feature to run tests sequentially.
+
+
+
+
+
+
 
 
 
