@@ -18,6 +18,8 @@ The current version is working properly and I upgrade it step by step to make it
   
 As I test it in Windows OS, I set d:\config.ini as the ini file name in main.rs file.
 
+If you use it on other operating systems, remember to change the ini file path based on your requirements.
+
 But you can change it based on your requirements.
 
 to use this file, you are supposed to first initialize the structure by passing the required fields.
