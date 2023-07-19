@@ -17,7 +17,7 @@ pub struct IniNode {
 }
 
 pub trait Methods {
-    //fn print_file_name(&self);
+	fn new(f_name: String) -> IniNode;	
     fn check_file_exists(&self) -> bool;
     fn create_file(&self) -> bool;
     fn process_file(&mut self) -> bool;
@@ -26,12 +26,18 @@ pub trait Methods {
     fn save(&mut self);
 }
 
-impl Methods for IniNode {
-    /* fn print_file_name(&self)
-    {
-       println!("{}",self.filename);
+impl Methods for IniNode 
+{
+	
+	fn new( f_name: String) -> IniNode
+	{
+        IniNode {
+			filename	: f_name,
+			hashmap 	: HashMap::new(),
+			hashset  	: HashSet::new()
+        }
     }
-    */
+	
 
     fn check_file_exists(&self) -> bool {
         let b = std::path::Path::new(&self.filename).exists();
@@ -137,7 +143,6 @@ impl Methods for IniNode {
     }
 }
 	
-	
 }
 
 
@@ -151,21 +156,17 @@ mod tests
 	use crate::ini::ini_handler::Methods;	
 
 	#[test]
-    	fn create_ini() 
+    fn create_ini() 
 	{
-		let keys = HashMap::new();
-		let set  = HashSet::new();
-		let mut node = ini_handler::IniNode{filename:"d:\\config.ini".to_string(),hashmap:keys,hashset:set};		
+		let mut node = ini_handler::IniNode::new(String::from("d:\\config.ini"));		
 		node.process_file();
 		assert!(node.check_file_exists());		
-    	}
+    }
 	
 	#[test]	
 	fn save_string_key()
 	{
-		let keys = HashMap::new();
-		let set  = HashSet::new();
-		let mut node = ini_handler::IniNode{filename:"d:\\config.ini".to_string(),hashmap:keys,hashset:set};		
+		let mut node = ini_handler::IniNode::new(String::from("d:\\config.ini"));
 		node.process_file();
 		assert!(node.check_file_exists());	
 		
@@ -176,9 +177,7 @@ mod tests
 	#[test]
 	fn save_integer_key()
 	{
-		let keys = HashMap::new();
-		let set  = HashSet::new();
-		let mut node = ini_handler::IniNode{filename:"d:\\config.ini".to_string(),hashmap:keys,hashset:set};		
+		let mut node = ini_handler::IniNode::new(String::from("d:\\config.ini"));
 		node.process_file();
 		assert!(node.check_file_exists());	
 		let i: i32 = -12;
@@ -189,9 +188,7 @@ mod tests
 	#[test]
 	fn save_float_key()
 	{
-		let keys = HashMap::new();
-		let set  = HashSet::new();
-		let mut node = ini_handler::IniNode{filename:"d:\\config.ini".to_string(),hashmap:keys,hashset:set};		
+		let mut node = ini_handler::IniNode::new(String::from("d:\\config.ini"));
 		node.process_file();
 		assert!(node.check_file_exists());	
 		let f: f64 = 3.14;

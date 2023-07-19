@@ -1,14 +1,11 @@
 mod ini;
 
 use crate::ini::ini_handler::Methods;  
-use std::collections::HashMap;
-use std::collections::HashSet;
+
 
 fn main() 
 {
-    let keys = HashMap::new();
-    let set  = HashSet::new();
-    let mut node = ini::ini_handler::IniNode{filename:"d:\\config.ini".to_string(),hashmap:keys,hashset:set};
+    let mut node = ini::ini_handler::IniNode::new(String::from("d:\\config.ini"));
 
     node.process_file();  
 	
