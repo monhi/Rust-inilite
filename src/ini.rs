@@ -151,8 +151,6 @@ impl Methods for IniNode
 mod tests 
 {
     use super::*;
-	use std::collections::HashMap;
-	use std::collections::HashSet;
 	use crate::ini::ini_handler::Methods;	
 
 	#[test]
